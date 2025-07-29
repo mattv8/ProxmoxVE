@@ -47,20 +47,29 @@ msg_ok "Installed Dependencies"
 
 setup_uv
 msg_info "Setup Python3"
-$STD apt-get install -y \
-  python3.13 \
-  python3.13-dev \
-  python3.13-venv
-msg_ok "Setup Python3"
+# Try Python 3.12 first (available in Ubuntu 24.04), fallback to 3.11 if needed
+if apt-cache show python3.12 >/dev/null 2>&1; then
+  PYTHON_VERSION="3.12"
+elif apt-cache show python3.11 >/dev/null 2>&1; then
+  PYTHON_VERSION="3.11"
+else
+  PYTHON_VERSION="3.10"
+fi
 
-msg_info "Preparing Python 3.13 for uv"
-$STD uv python install 3.13
-UV_PYTHON=$(uv python list | awk '/3\.13\.[0-9]+.*\/root\/.local/ {print $2; exit}')
+$STD apt-get install -y \
+  python${PYTHON_VERSION} \
+  python${PYTHON_VERSION}-dev \
+  python${PYTHON_VERSION}-venv
+msg_ok "Setup Python${PYTHON_VERSION}"
+
+msg_info "Preparing Python ${PYTHON_VERSION} for uv"
+$STD uv python install ${PYTHON_VERSION}
+UV_PYTHON=$(uv python list | awk "/${PYTHON_VERSION}\.[0-9]+.*\/root\/.local/ {print \$2; exit}")
 if [[ -z "$UV_PYTHON" ]]; then
-  msg_error "No local Python 3.13 found via uv"
+  msg_error "No local Python ${PYTHON_VERSION} found via uv"
   exit 1
 fi
-msg_ok "Prepared Python 3.13"
+msg_ok "Prepared Python ${PYTHON_VERSION}"
 
 msg_info "Setting up Home Assistant-Core environment"
 rm -rf /srv/homeassistant
