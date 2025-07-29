@@ -712,29 +712,53 @@ advanced_settings() {
     exit_script
   fi
 
-  if SD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a DNS Search Domain (leave blank for HOST)" 8 58 --title "DNS Search Domain" 3>&1 1>&2 2>&3); then
-    if [ -z "$SD" ]; then
-      SX=Host
-      SD=""
+  if [[ "$METHOD" != "config_file" ]]; then
+    if SD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a DNS Search Domain (leave blank for HOST)" 8 58 --title "DNS Search Domain" 3>&1 1>&2 2>&3); then
+      if [ -z "$SD" ]; then
+        SX=Host
+        SD=""
+      else
+        SX=$SD
+        SD="-searchdomain=$SD"
+      fi
+      echo -e "${SEARCH}${BOLD}${DGN}DNS Search Domain: ${BGN}$SX${CL}"
     else
-      SX=$SD
-      SD="-searchdomain=$SD"
+      exit_script
     fi
-    echo -e "${SEARCH}${BOLD}${DGN}DNS Search Domain: ${BGN}$SX${CL}"
   else
-    exit_script
+    # Display DNS Search Domain from config file
+    if [[ -n "$SD" ]]; then
+      if [[ "$SD" == *"-searchdomain="* ]]; then
+        SD_VALUE="${SD#-searchdomain=}"
+        echo -e "${SEARCH}${BOLD}${DGN}DNS Search Domain: ${BGN}$SD_VALUE${CL}"
+      else
+        echo -e "${SEARCH}${BOLD}${DGN}DNS Search Domain: ${BGN}$SD${CL}"
+      fi
+    fi
   fi
 
-  if NX=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a DNS Server IP (leave blank for HOST)" 8 58 --title "DNS SERVER IP" 3>&1 1>&2 2>&3); then
-    if [ -z "$NX" ]; then
-      NX=Host
-      NS=""
+  if [[ "$METHOD" != "config_file" ]]; then
+    if NX=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a DNS Server IP (leave blank for HOST)" 8 58 --title "DNS SERVER IP" 3>&1 1>&2 2>&3); then
+      if [ -z "$NX" ]; then
+        NX=Host
+        NS=""
+      else
+        NS="-nameserver=$NX"
+      fi
+      echo -e "${NETWORK}${BOLD}${DGN}DNS Server IP Address: ${BGN}$NX${CL}"
     else
-      NS="-nameserver=$NX"
+      exit_script
     fi
-    echo -e "${NETWORK}${BOLD}${DGN}DNS Server IP Address: ${BGN}$NX${CL}"
   else
-    exit_script
+    # Display DNS Server IP from config file
+    if [[ -n "$NS" ]]; then
+      if [[ "$NS" == *"-nameserver="* ]]; then
+        NS_VALUE="${NS#-nameserver=}"
+        echo -e "${NETWORK}${BOLD}${DGN}DNS Server IP Address: ${BGN}$NS_VALUE${CL}"
+      else
+        echo -e "${NETWORK}${BOLD}${DGN}DNS Server IP Address: ${BGN}$NS${CL}"
+      fi
+    fi
   fi
 
   if MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a MAC Address(leave blank for generated MAC)" 8 58 --title "MAC ADDRESS" 3>&1 1>&2 2>&3); then
