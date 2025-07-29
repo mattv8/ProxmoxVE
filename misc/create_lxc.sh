@@ -315,7 +315,26 @@ flock -w 60 9 || {
   exit 211
 }
 
-if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" &>/dev/null; then
+# Capture the actual error message from pct create
+CREATE_OUTPUT=$(pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" 2>&1)
+CREATE_EXIT_CODE=$?
+
+if [ "$CREATE_EXIT_CODE" -ne 0 ]; then
+  msg_error "Container creation failed with exit code $CREATE_EXIT_CODE."
+  msg_error "Error output: $CREATE_OUTPUT"
+
+  # Check for common issues
+  if echo "$CREATE_OUTPUT" | grep -q "already exists"; then
+    msg_error "Container ID $CTID already exists. Please choose a different ID."
+    exit 212
+  elif echo "$CREATE_OUTPUT" | grep -q "Permission denied"; then
+    msg_error "Permission denied. Check if you have sufficient privileges."
+    exit 213
+  elif echo "$CREATE_OUTPUT" | grep -q "No space left"; then
+    msg_error "No space left on storage. Check available space."
+    exit 214
+  fi
+
   msg_error "Container creation failed. Checking if template is corrupted or incomplete."
 
   if [[ ! -s "$TEMPLATE_PATH" || "$(stat -c%s "$TEMPLATE_PATH")" -lt 1000000 ]]; then
@@ -326,6 +345,7 @@ if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[
     rm -f "$TEMPLATE_PATH"
   else
     msg_error "Template is valid, but container creation still failed."
+    msg_error "Please check the error output above for details."
     exit 209
   fi
 
