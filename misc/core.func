@@ -407,3 +407,6 @@ check_or_create_swap() {
 }
 
 trap 'stop_spinner' EXIT INT TERM
+
+# Load all functions and variables
+load_functions
