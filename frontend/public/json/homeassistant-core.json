@@ -23,7 +23,7 @@
                 "ram": 2048,
                 "hdd": 10,
                 "os": "ubuntu",
-                "version": "24.10"
+                "version": "24.04"
             }
         }
     ],
