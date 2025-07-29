@@ -1159,6 +1159,8 @@ build_container() {
     $PW
   "
   # This executes create_lxc.sh and creates the container and .conf file
+  # Export necessary variables for the subshell
+  export TAB TAB3 CTID PCT_OSTYPE PCT_OSVERSION PCT_DISK_SIZE PCT_OPTIONS DEFAULT_PCT_OPTIONS VERBOSE STORAGE YW BL RD BGN GN DGN CL CROSS
   bash -c "$(curl -fsSL https://raw.githubusercontent.com/mattv8/ProxmoxVE/main/misc/create_lxc.sh)" $?
 
   LXC_CONFIG="/etc/pve/lxc/${CTID}.conf"
