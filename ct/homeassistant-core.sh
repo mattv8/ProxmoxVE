@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/mattv8/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: tteck (tteckster) | Co-Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -22,9 +22,9 @@ catch_errors
 function update_script() {
   header_info
   if ! lsb_release -d | grep -q "Ubuntu 24.04"; then
-    msg_error "Wrong OS detected. This script only supports Ubuntu 24.04."
+    msg_error "This script is designed for Ubuntu 24.04 only."
     msg_error "Read Guide: https://github.com/community-scripts/ProxmoxVE/discussions/1549"
-    exit 1
+    exit
   fi
   check_container_storage
   check_container_resources

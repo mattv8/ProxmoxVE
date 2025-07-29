@@ -1,21 +1,16 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2025 community-scripts ORG
 # Author: tteck (tteckster)
-# Co-Author: MickLesk
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 # This sets verbose mode if the global variable is set to "yes"
 # if [ "$VERBOSE" == "yes" ]; then set -x; fi
 
 if command -v curl >/dev/null 2>&1; then
-  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-  load_functions
-  #echo "(create-lxc.sh) Loaded core.func via curl"
-elif command -v wget >/dev/null 2>&1; then
-  source <(wget -qO- https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-  load_functions
-  #echo "(create-lxc.sh) Loaded core.func via wget"
+  source <(curl -fsSL https://raw.githubusercontent.com/mattv8/ProxmoxVE/main/misc/core.func)
+else
+  source <(wget -qO- https://raw.githubusercontent.com/mattv8/ProxmoxVE/main/misc/core.func)
 fi
 
 # This sets error handling options and defines the error_handler function to handle errors
