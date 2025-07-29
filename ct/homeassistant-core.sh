@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-ubuntu}"
-var_version="${var_version:-24.10}"
+var_version="${var_version:-24.04}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -21,10 +21,10 @@ catch_errors
 
 function update_script() {
   header_info
-  if ! lsb_release -d | grep -q "Ubuntu 24.10"; then
-    msg_error "Wrong OS detected. This script only supports Ubuntu 24.10."
+  if ! lsb_release -d | grep -q "Ubuntu 24.04"; then
+    msg_error "This script is designed for Ubuntu 24.04 only."
     msg_error "Read Guide: https://github.com/community-scripts/ProxmoxVE/discussions/1549"
-    exit 1
+    exit
   fi
   check_container_storage
   check_container_resources
