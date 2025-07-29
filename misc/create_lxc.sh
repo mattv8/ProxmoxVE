@@ -13,6 +13,9 @@ else
   source <(wget -qO- https://raw.githubusercontent.com/mattv8/ProxmoxVE/main/misc/core.func)
 fi
 
+# Load all functions and set up variables
+load_functions
+
 # This sets error handling options and defines the error_handler function to handle errors
 set -Eeuo pipefail
 trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
