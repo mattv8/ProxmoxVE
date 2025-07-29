@@ -16,6 +16,19 @@ fi
 # Load all functions and set up variables
 load_functions
 
+# Manually set critical variables in case load_functions fails
+TAB="  "
+TAB3="      "
+CM="${TAB}✔️${TAB}"
+CROSS="${TAB}✖️${TAB}"
+YW=$(echo "\033[33m")
+BL=$(echo "\033[36m")
+RD=$(echo "\033[01;31m")
+BGN=$(echo "\033[4;92m")
+GN=$(echo "\033[1;92m")
+DGN=$(echo "\033[32m")
+CL=$(echo "\033[m")
+
 # This sets error handling options and defines the error_handler function to handle errors
 set -Eeuo pipefail
 trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
